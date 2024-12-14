@@ -8,7 +8,7 @@ pipeline {
         ansiColor('xterm')
     }
     parameters{
-        choice(name: 'ACTION', choices: ['APPLY', 'DESTROY'], description: 'Select Action')
+        choice(name: 'ACTION', choices: ['apply', 'destroy'], description: 'Select Action')
     }
     stages {
         stage('Init and plan') {
@@ -27,10 +27,10 @@ pipeline {
                 withAWS(region: 'us-east-1', credentials: 'Ec2-user'){
                     sh """
                     cd 00-vpc
-                    if [${params.ACTION}=='APPLY']
+                    if [${params.ACTION}=='apply']
                     then
                       terraform apply -auto-approve tfplan
-                    elif [${params.ACTION}=='DESTROY']
+                    elif [${params.ACTION}=='destroy']
                     then
                       terraform destroy -auto-approve
                     fi
