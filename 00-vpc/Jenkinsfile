@@ -13,18 +13,13 @@ pipeline {
     stages {
         stage('Init') {
             steps {
+                withAWS(region: 'us-east-1', credentials: 'your-credentials-id'){
                 sh  """
                     cd 00-vpc
                     terraform init -reconfigure
+                    terraform plan -out=tfplan
                   """
-            }
-        }
-        stage('Plan') {
-            steps {
-                withAWS(region: 'us-east-1', credentials: 'your-credentials-id'){
-                sh 'terraform plan -out=tfplan'  
-                sh 'env'
-                }
+               }
             }
         }
         stage('Deploy') {
@@ -34,7 +29,7 @@ pipeline {
         }
         stage('Print Params'){
             steps{
-                echo "Choice: ${params.CHOICE}"
+                echo "ACTION: ${params.ACTION}"
               
             }
         }
